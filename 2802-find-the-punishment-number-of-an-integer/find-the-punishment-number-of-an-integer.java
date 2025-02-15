@@ -29,7 +29,7 @@ class Solution {
         boolean ans = false;
         for(int i=0; i<num.length(); i++){
             String curr = num.substring(0, i+1);
-            ans |= isValid(num.substring(i+1), sum-Integer.parseInt(curr));
+            ans = ans || isValid(num.substring(i+1), sum-Integer.parseInt(curr));
         }
         return ans;
     }
