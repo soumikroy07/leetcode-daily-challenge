@@ -1,29 +1,21 @@
 class Solution {
-    // int dp[];
     Map<Integer, Integer> map;
     public int minCostClimbingStairs(int[] cost) {
-        // dp = new int[cost.length+2];
-        // Arrays.fill(cost, -1);
         map = new HashMap<>();
-        int cost1 = findCost(cost, 0);
-        int cost2 = findCost(cost, 1);
-        return Math.min(cost1, cost2);
+        return Math.min(help(cost, 0), help(cost, 1));
     }
 
-    int findCost(int cost[], int i){
+    int help(int cost[], int i){
         if(i >= cost.length){
             return 0;
         }
-        if(map.containsKey(i)){
+
+        if(map.get(i) != null){
             return map.get(i);
         }
 
-        // if(dp[i] != -1){
-        //     return dp[i];
-        // }
-        // int ans = 0;
-        int ans1 = cost[i] + findCost(cost, i+1);
-        int ans2 = cost[i] + findCost(cost, i+2);
+        int ans1 = help(cost, i+1) + cost[i];
+        int ans2 = help(cost, i+2) + cost[i];
 
         map.put(i, Math.min(ans1, ans2));
         return Math.min(ans1, ans2);
