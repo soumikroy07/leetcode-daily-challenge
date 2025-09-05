@@ -1,33 +1,32 @@
 class Solution {
+    int dp[][];
     public int minFallingPathSum(int[][] grid) {
-        int n = grid.length, res = Integer.MAX_VALUE;
-        int[][] dp = new int[n][n];
-        for(int row[] : dp) {
-            Arrays.fill(row, -1);
+        int n = grid.length;
+        dp = new int[n+1][n+1];
+        return help(grid, 0, -1);
+    }
+
+    private int help(int grid[][], int i, int prev){
+        if(i >= grid.length){
+            return 0;
+        }
+        if(prev != -1 && dp[i][prev] != 0){
+            return dp[i][prev];
         }
 
-        for(int j = 0; j < n; ++j) {
-            dp[0][j] = grid[0][j];
-        }
-
-        for(int i = 1; i < n; ++i) {
-            for(int j = 0; j < n; ++j) {
-                int temp = Integer.MAX_VALUE;
-
-                for(int k = 0; k < n; ++k) {
-                    if(j != k) {
-                        temp = Math.min(temp, grid[i][j] + dp[i - 1][k]);
-                    }
-
-                    dp[i][j] = temp;
-                }
+        int ans = Integer.MAX_VALUE;
+        for (int j=0; j< grid.length; j++){
+            if(j == prev){
+                continue;
             }
+            ans = Math.min(ans, help(grid, i+1, j) + grid[i][j]);
+
         }
 
-        for(int j = 0; j < n; ++j) {
-            res = Math.min(res, dp[n - 1][j]);
+        if(prev != -1){
+            dp[i][prev] = ans;
         }
 
-        return res;
+        return ans;
     }
 }
