@@ -5,29 +5,33 @@ class Solution {
         Arrays.fill(dp, Integer.MAX_VALUE);
         dp[0] = Integer.MIN_VALUE;
 
+
         for(int i=0; i<n; i++){
-            int key = nums[i];
+            int num = nums[i];
             int low = 0, high = i+1;
+
             while(low <= high){
-                int mid = low + (high - low)/2;
-                if(dp[mid] >= key && dp[mid - 1] < key){
-                    dp[mid] = key;
+                int mid = low + (high - low) / 2;
+                if(dp[mid] > num  && dp[mid-1] < num){
+                    dp[mid] = num;
                     break;
-                }else if(dp[mid] < key){
-                    low = mid + 1;
+                }else if(dp[mid] < num){
+                    low = mid+1;
                 }else{
-                    high = mid - 1;
+                    high = mid-1;
                 }
             }
         }
 
         int ans = -1;
-        for(int i=n; i>=0; i--){
+        for(int i=0; i<n+1; i++){
             if(dp[i] != Integer.MAX_VALUE){
                 ans = i;
+            }else{
                 break;
             }
         }
+
         return ans;
     }
 }
