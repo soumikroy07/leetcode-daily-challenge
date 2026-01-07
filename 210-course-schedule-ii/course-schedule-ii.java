@@ -1,7 +1,6 @@
 class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>();
-        
         for(int i=0; i<numCourses; i++){
             adj.add(new ArrayList<>());
         }
@@ -10,22 +9,28 @@ class Solution {
             adj.get(pre[0]).add(pre[1]);
         }
 
-        if(hasCycle(adj, numCourses)){
-            return new int[]{};
-        }
-
-        Stack<Integer> st = new Stack<>();
         boolean visited[] = new boolean[numCourses];
+        boolean recStack[] = new boolean[numCourses];
 
         for(int i=0; i<numCourses; i++){
             if(!visited[i]){
-                topo(adj, i, visited, st);
+                if(hasCycle(adj, i, visited, recStack)){
+                    return new int[]{};
+                }
             }
         }
 
-        int i = numCourses - 1;
-        int ans[] = new int[numCourses];
+        Stack<Integer> st = new Stack<>();
+        Arrays.fill(visited, false);
 
+        for(int i=0; i<numCourses; i++){
+            if(!visited[i]){
+                build(adj, i, visited, st);
+            }
+        }
+
+        int ans[] = new int[st.size()];
+        int i = st.size()-1;
         while(!st.isEmpty()){
             ans[i--] = st.pop();
         }
@@ -33,41 +38,13 @@ class Solution {
         return ans;
     }
 
-    void topo(List<List<Integer>> adj, int node, boolean visited[], Stack<Integer> st){
-        visited[node] = true;
-        for(int nei: adj.get(node)){
-            if(!visited[nei]){
-                topo(adj, nei, visited, st);
-            }
-        }
-
-        st.push(node);
-    }
-
-    boolean hasCycle(List<List<Integer>> adj, int n){
-        boolean visited[] = new boolean[n];
-        boolean recStack[] = new boolean[n];
-
-        for(int i=0; i<n; i++){
-            if(!visited[i]){
-                if(dfs(adj, i, visited, recStack)){
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    boolean dfs(List<List<Integer>> adj, int node, boolean visited[], boolean recStack[]){
+    boolean hasCycle(List<List<Integer>> adj, int node, boolean visited[], boolean recStack[]){
         visited[node] = true;
         recStack[node] = true;
 
         for(int nei: adj.get(node)){
             if(!visited[nei]){
-                if(dfs(adj, nei, visited, recStack)){
-                    return true;
-                }
+                if(hasCycle(adj, nei, visited, recStack)) return true;
             }else if(recStack[nei]){
                 return true;
             }
@@ -76,5 +53,17 @@ class Solution {
         recStack[node] = false;
 
         return false;
+    }
+
+    void build(List<List<Integer>> adj, int node, boolean visited[], Stack<Integer> st){
+        visited[node] = true;
+
+        for(int nei: adj.get(node)){
+            if(!visited[nei]){
+                build(adj, nei, visited, st);
+            }
+        }
+
+        st.push(node);
     }
 }
