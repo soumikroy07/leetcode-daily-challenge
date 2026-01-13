@@ -46,17 +46,17 @@ class Solution {
             int mid = low + (high - low) / 2;
 
             // Check if mid+1 is the maximum element
-            if (mid < high && arr[mid + 1] < arr[mid]) 
+            if (arr[mid + 1] < arr[mid]) 
                 return mid;
             
 
             // Check if mid is the maximum element
-            if (mid > low && arr[mid] < arr[mid - 1]) {
+            else if (arr[mid] < arr[mid - 1]) {
                 return mid - 1;
             }
 
             // Decide whether to search in the left or right half
-            if (arr[high] > arr[mid]) {
+            else if (arr[high] > arr[mid]) {
                 high = mid - 1;
             } else {
                 low = mid + 1;
