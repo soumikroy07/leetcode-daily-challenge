@@ -1,20 +1,24 @@
 class Solution {
-    int dp[][];
+    Boolean dp[][];
+    int m, n;
     public boolean isMatch(String s, String p) {
-        dp = new int[s.length()+1][p.length()+1];
+        m = s.length();
+        n = p.length();
+        dp = new Boolean[m+1][n+1];
         return help(s, p, 0, 0);
     }
-    boolean help(String s, String p, int i, int j){
-        if(i == s.length() && j == p.length()){
-            return true;
-        }
 
-        if(i != s.length() && j == p.length()){
+    private boolean help(String s, String p, int i, int j){
+        if(i == m && j == n){
+            return true;
+        } 
+
+        if(i < m && j == n){
             return false;
         }
 
-        if(i == s.length() && j < p.length()){
-            for(int k=j; k <p.length(); k++){
+        if(i == m && j < n){
+            for(int k=j; k<n; k++){
                 if(p.charAt(k) != '*'){
                     return false;
                 }
@@ -22,23 +26,21 @@ class Solution {
             return true;
         }
 
-        if(dp[i][j] != 0){
-            return dp[i][j] == 1 ? false : true;
+        if(dp[i][j] != null){
+            return dp[i][j];
         }
 
         boolean ans = false;
         if(s.charAt(i) == p.charAt(j)){
             ans = help(s, p, i+1, j+1);
-        }else if(p.charAt(j) == '?'){
-            ans = help(s, p, i+1, j+1);
         }else if(p.charAt(j) == '*'){
             ans = help(s, p, i+1, j) || help(s, p, i, j+1);
+        }else if(p.charAt(j) == '?'){
+            ans = help(s, p, i+1, j+1);
         }else{
-            return false;
+            ans = false;
         }
 
-        dp[i][j] = ans == false ? 1 : 2;
-
-        return ans;
+        return dp[i][j] = ans;
     }
 }
